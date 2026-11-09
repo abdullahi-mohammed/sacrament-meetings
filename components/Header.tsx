@@ -53,7 +53,7 @@ export default function Header() {
             <span className="text-xs uppercase tracking-wider text-zinc-400 dark:text-zinc-500 block font-semibold">
               Today
             </span>
-            <time className="text-sm font-medium text-zinc-700 dark:text-zinc-300 min-h-[1.25rem] inline-block">
+            <time className="text-sm font-medium text-zinc-700 dark:text-zinc-300 min-h-5 inline-block">
               {currentDate || 'Sunday Service'}
             </time>
           </div>

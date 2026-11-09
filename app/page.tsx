@@ -35,7 +35,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative w-full aspect-[8/5] rounded-2xl overflow-hidden shadow-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800">
+          <div className="relative w-full aspect-8/5 rounded-2xl overflow-hidden shadow-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800">
             <Image
               src="/chapel-hero.svg"
               alt="Oak Hills Ward Chapel Meetinghouse Illustration"
