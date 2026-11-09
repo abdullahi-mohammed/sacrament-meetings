@@ -1,8 +1,11 @@
+import { Suspense } from 'react';
 import { headers } from 'next/headers';
 import MeetingCard from '@/components/MeetingCard';
 import type { SacramentMeeting } from '@/lib/types';
 import { getMeetings } from '@/lib/meetings-db';
 import Link from 'next/link';
+
+export const instant = false;
 
 async function fetchMeetings(): Promise<SacramentMeeting[]> {
   try {
@@ -20,9 +23,27 @@ async function fetchMeetings(): Promise<SacramentMeeting[]> {
   return getMeetings();
 }
 
-export default async function MeetingsPage() {
+async function MeetingsList() {
   const meetings = await fetchMeetings();
 
+  if (meetings.length === 0) {
+    return (
+      <div className="text-center py-12 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800">
+        <p className="text-zinc-500 dark:text-zinc-400">No meeting agendas found.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {meetings.map((meeting) => (
+        <MeetingCard key={meeting.id} meeting={meeting} />
+      ))}
+    </div>
+  );
+}
+
+export default function MeetingsPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-6 border-b border-zinc-200 dark:border-zinc-800 gap-4">
@@ -44,17 +65,20 @@ export default async function MeetingsPage() {
         </div>
       </div>
 
-      {meetings.length === 0 ? (
-        <div className="text-center py-12 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800">
-          <p className="text-zinc-500 dark:text-zinc-400">No meeting agendas found.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {meetings.map((meeting) => (
-            <MeetingCard key={meeting.id} meeting={meeting} />
-          ))}
-        </div>
-      )}
+      <Suspense
+        fallback={
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div
+                key={i}
+                className="p-6 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 h-64"
+              />
+            ))}
+          </div>
+        }
+      >
+        <MeetingsList />
+      </Suspense>
     </div>
   );
 }

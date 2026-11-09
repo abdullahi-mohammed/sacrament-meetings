@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 import { connection } from 'next/server';
 import { getMeetings } from '@/lib/meetings-db';
 
+export const instant = false;
+
 export default async function CurrentMeetingPage() {
   await connection();
 
