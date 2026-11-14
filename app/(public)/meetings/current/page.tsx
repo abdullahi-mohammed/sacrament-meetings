@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { connection } from 'next/server';
-import { getMeetings } from '@/lib/meetings-db';
+import { getMeetingByDate } from '@/lib/meetings-db';
 
 export const instant = false;
 
@@ -17,10 +17,10 @@ export default async function CurrentMeetingPage() {
   const day = String(sunday.getDate()).padStart(2, '0');
   const formattedSunday = `${year}-${month}-${day}`;
 
-  const meetings = getMeetings(formattedSunday);
+  const meeting = await getMeetingByDate(formattedSunday);
 
-  if (meetings.length > 0) {
-    redirect(`/meetings/${meetings[0].id}`);
+  if (meeting) {
+    redirect(`/meetings/${meeting.id}`);
   }
 
   // Fallback to all meetings if no meeting matches the current Sunday date

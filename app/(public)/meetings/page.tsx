@@ -1,30 +1,21 @@
 import { Suspense } from 'react';
-import { headers } from 'next/headers';
 import MeetingCard from '@/components/MeetingCard';
-import type { SacramentMeeting } from '@/lib/types';
-import { getMeetings } from '@/lib/meetings-db';
+import { getMeetings, getMeetingsTotalPages } from '@/lib/meetings-db';
 import Link from 'next/link';
+import { MeetingSearch } from '@/components/MeetingSearch';
+import { Pagination } from '@/components/Pagination';
 
-export const instant = false;
-
-async function fetchMeetings(): Promise<SacramentMeeting[]> {
-  try {
-    const headersList = await headers();
-    const host = headersList.get('host') || 'localhost:3000';
-    const proto = headersList.get('x-forwarded-proto') || (host.startsWith('localhost') ? 'http' : 'https');
-    const res = await fetch(`${proto}://${host}/api/meetings`, { cache: 'no-store' });
-    if (res.ok) {
-      const data: SacramentMeeting[] = await res.json();
-      return data;
-    }
-  } catch {
-    // Fallback during static build or if direct internal fetch fails
-  }
-  return getMeetings();
-}
-
-async function MeetingsList() {
-  const meetings = await fetchMeetings();
+async function MeetingsList({
+  query,
+  currentPage,
+}: {
+  query: string;
+  currentPage: number;
+}) {
+  const [meetings, totalPages] = await Promise.all([
+    getMeetings(query, currentPage),
+    getMeetingsTotalPages(query),
+  ]);
 
   if (meetings.length === 0) {
     return (
@@ -35,15 +26,24 @@ async function MeetingsList() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {meetings.map((meeting) => (
-        <MeetingCard key={meeting.id} meeting={meeting} />
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {meetings.map((meeting) => (
+          <MeetingCard key={meeting.id} meeting={meeting} />
+        ))}
+      </div>
+      <Pagination totalPages={totalPages} />
+    </>
   );
 }
 
-export default function MeetingsPage() {
+export default async function MeetingsPage(props: {
+  searchParams?: Promise<{ query?: string; page?: string }>;
+}) {
+  const searchParams = await props.searchParams;
+  const query = searchParams?.query ?? '';
+  const currentPage = Math.max(1, Number(searchParams?.page) || 1);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-6 border-b border-zinc-200 dark:border-zinc-800 gap-4">
@@ -55,7 +55,8 @@ export default function MeetingsPage() {
             Select a meeting below to view or print the full order of service and announcements.
           </p>
         </div>
-        <div>
+        <div className="flex flex-col gap-3 sm:items-end">
+          <MeetingSearch />
           <Link
             href="/meetings/current"
             className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg bg-blue-700 text-white shadow-sm hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-500 transition-colors"
@@ -77,7 +78,7 @@ export default function MeetingsPage() {
           </div>
         }
       >
-        <MeetingsList />
+        <MeetingsList query={query} currentPage={currentPage} />
       </Suspense>
     </div>
   );
