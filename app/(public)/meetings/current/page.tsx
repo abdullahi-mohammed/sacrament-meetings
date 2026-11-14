@@ -10,7 +10,8 @@ export default async function CurrentMeetingPage() {
   const today = new Date();
   const dayOfWeek = today.getDay(); // 0 (Sun) through 6 (Sat)
   const sunday = new Date(today);
-  sunday.setDate(today.getDate() - dayOfWeek); // roll back to most recent Sunday
+  const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
+  sunday.setDate(today.getDate() + daysUntilSunday);
 
   const year = sunday.getFullYear();
   const month = String(sunday.getMonth() + 1).padStart(2, '0');

@@ -24,8 +24,11 @@ export default function NavLinks() {
           item.href === '/'
             ? pathname === '/'
             : item.href === '/meetings'
-            ? pathname === '/meetings'
-            : pathname.startsWith(item.href);
+            ? pathname === '/meetings' || (
+                pathname.startsWith('/meetings/') &&
+                pathname !== '/meetings/current'
+              )
+            : pathname === item.href;
 
         return (
           <Link
