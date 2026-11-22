@@ -41,6 +41,13 @@ export default function MeetingDetail({ meeting }: MeetingDetailProps) {
           <span aria-hidden="true" className="mr-1.5">&larr;</span> Back to All Meetings
         </Link>
         <div className="flex items-center gap-2">
+          <Link
+            href={`/meetings/${meeting.id}/edit`}
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg border border-zinc-300 text-zinc-800 shadow-sm hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800 transition-colors"
+            aria-label={`Edit meeting for ${formattedDate}`}
+          >
+            Edit Meeting
+          </Link>
           <button
             type="button"
             onClick={handlePrint}

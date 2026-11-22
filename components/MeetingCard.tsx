@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import DeleteMeetingButton from '@/components/DeleteMeetingButton';
 import type { SacramentMeeting, MeetingType } from '@/lib/types';
 
 interface MeetingCardProps {
@@ -105,18 +106,28 @@ export default function MeetingCard({ meeting }: MeetingCardProps) {
         </div>
       </div>
 
-      <div className="mt-6 pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
+      <div className="mt-6 pt-4 border-t border-zinc-100 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-3">
         <span className="text-xs text-zinc-500 dark:text-zinc-400">
           {meeting.announcements?.length ? `${meeting.announcements.length} announcements` : 'No announcements'}
         </span>
-        <Link
-          href={`/meetings/${meeting.id}`}
-          className="inline-flex items-center text-sm font-semibold text-blue-700 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 focus:outline-none focus-visible:underline"
-          aria-label={`View full program for ${formattedDate}`}
-        >
-          View Program
-          <span aria-hidden="true" className="ml-1 transition-transform group-hover:translate-x-1">&rarr;</span>
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href={`/meetings/${meeting.id}`}
+            className="inline-flex items-center text-sm font-semibold text-blue-700 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 focus:outline-none focus-visible:underline"
+            aria-label={`View full program for ${formattedDate}`}
+          >
+            View Program
+            <span aria-hidden="true" className="ml-1 transition-transform group-hover:translate-x-1">&rarr;</span>
+          </Link>
+          <Link
+            href={`/meetings/${meeting.id}/edit`}
+            className="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-semibold text-zinc-700 hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            aria-label={`Edit meeting for ${formattedDate}`}
+          >
+            Edit
+          </Link>
+          <DeleteMeetingButton id={meeting.id} meetingLabel={formattedDate} />
+        </div>
       </div>
     </article>
   );

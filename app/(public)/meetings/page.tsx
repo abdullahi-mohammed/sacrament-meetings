@@ -57,12 +57,20 @@ export default async function MeetingsPage(props: {
         </div>
         <div className="flex flex-col gap-3 sm:items-end">
           <MeetingSearch />
-          <Link
-            href="/meetings/current"
-            className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg bg-blue-700 text-white shadow-sm hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-500 transition-colors"
-          >
-            Go to This Sunday &rarr;
-          </Link>
+          <div className="flex flex-wrap gap-2 sm:justify-end">
+            <Link
+              href="/meetings/new"
+              className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg border border-blue-700 text-blue-700 shadow-sm hover:bg-blue-50 dark:border-blue-400 dark:text-blue-300 dark:hover:bg-blue-950/40 transition-colors"
+            >
+              Create Meeting
+            </Link>
+            <Link
+              href="/meetings/current"
+              className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg bg-blue-700 text-white shadow-sm hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-500 transition-colors"
+            >
+              Go to This Sunday &rarr;
+            </Link>
+          </div>
         </div>
       </div>
 
